@@ -1046,21 +1046,34 @@ function updateWalletUI(connected) {
 }
 
 // ── LIVE STATS ─────────────────────────────────────────────────────────────
+const RPC_URLS = [
+  "https://base.llamarpc.com",
+  "https://base-rpc.publicnode.com",
+  "https://base.drpc.org",
+  "https://mainnet.base.org"
+];
+let _rpc = null;
+async function getRpc() {
+  if (_rpc) { try { await _rpc.getBlockNumber(); return _rpc; } catch(e) { _rpc = null; } }
+  for (const url of RPC_URLS) {
+    try {
+      const p = new ethers.JsonRpcProvider(url);
+      await Promise.race([p.getBlockNumber(), new Promise((_,r)=>setTimeout(()=>r(new Error),3000))]);
+      _rpc = p; return _rpc;
+    } catch(e) { continue; }
+  }
+  return null;
+}
+
 async function loadStats() {
   try {
-    const rpc = new ethers.JsonRpcProvider("https://base.llamarpc.com");
+    const rpc = await getRpc();
+    if (!rpc) { document.getElementById('statSupply').textContent = 'See Basescan'; return; }
     const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
-
-    const [price, supply] = await Promise.all([
-      sale.pricePerToken(),
-      sale.availableSupply()
-    ]);
-
+    const [price, supply] = await Promise.all([sale.pricePerToken(), sale.availableSupply()]);
     const priceUSD = Number(price) / 1e6;
     document.getElementById('statPrice').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
     document.getElementById('statSupply').textContent = Number(supply).toLocaleString('en-US');
-
-    // Update hero price display
     document.querySelector('.price-value').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
   } catch(e) {
     document.getElementById('statSupply').textContent = 'See Basescan';
@@ -1071,18 +1084,22 @@ async function loadStats() {
 async function updateCostPreview(amountStr, previewId) {
   const el = document.getElementById(previewId);
   const amount = parseFloat(amountStr);
-  if (!amountStr || isNaN(amount) || amount < 0.01) {
-    el.textContent = '—';
-    return;
-  }
+  if (!amountStr || isNaN(amount) || amount < 0.01) { el.textContent = '—'; return; }
   try {
-    const rpc = new ethers.JsonRpcProvider("https://base.llamarpc.com");
-    const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
-    const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
-    const cost = await sale.calculateCost(he3Wei);
-    el.textContent = formatUSDC(cost);
+    const rpc = await getRpc();
+    if (rpc) {
+      const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
+      const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
+      const cost = await sale.calculateCost(he3Wei);
+      el.textContent = formatUSDC(cost);
+    } else {
+      // Local fallback: price per token is $200 = 200000000 USDC units
+      const PRICE_PER_TOKEN = 200; // update if price changes
+      el.textContent = '$' + (amount * PRICE_PER_TOKEN).toLocaleString('en-US', {minimumFractionDigits: 2});
+    }
   } catch(e) {
-    el.textContent = '—';
+    const PRICE_PER_TOKEN = 200;
+    el.textContent = '$' + (amount * PRICE_PER_TOKEN).toLocaleString('en-US', {minimumFractionDigits: 2});
   }
 }
 
