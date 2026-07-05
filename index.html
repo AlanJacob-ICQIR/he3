@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HE3 — The Helium-3 Market</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg:        #080C10;
+    --bg2:       #0D1219;
+    --bg3:       #111820;
+    --border:    #1E2A38;
+    --text:      #E8EDF2;
+    --muted:     #6B7E92;
+    --accent:    #00C2FF;
+    --accent2:   #0085B0;
+    --gold:      #F0C040;
+    --success:   #00D68F;
+    --danger:    #FF4D4D;
+    --font-main: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── GRID OVERLAY (signature element) ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,194,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,194,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-buy {
+    background: var(--accent);
+    color: var(--bg) !important;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 600 !important;
+  }
+
+  .nav-buy:hover { background: #00AADD !important; color: var(--bg) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 40px 80px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .hero-inner { max-width: 820px; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,194,255,0.3);
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--muted);
+    max-width: 580px;
+    margin: 0 auto 48px;
+    line-height: 1.7;
+  }
+
+  /* ── PRICE DISPLAY ── */
+  .price-display {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 32px;
+    margin-bottom: 40px;
+  }
+
+  .price-label {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .price-value {
+    font-family: var(--font-mono);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .price-ref {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .price-ref span { color: var(--success); }
+
+  /* ── BUY WIDGET ── */
+  .buy-widget {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .buy-widget-title {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .input-group input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-group input:focus { border-color: var(--accent); }
+
+  .input-group input::placeholder { color: var(--muted); }
+
+  .cost-preview {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cost-preview-label { font-size: 13px; color: var(--muted); }
+
+  .cost-preview-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #00AADD;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    margin-top: 10px;
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .status-msg {
+    margin-top: 14px;
+    font-size: 13px;
+    text-align: center;
+    min-height: 20px;
+    color: var(--muted);
+  }
+
+  .status-msg.success { color: var(--success); }
+  .status-msg.error { color: var(--danger); }
+  .status-msg.loading { color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .section-body {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 640px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ── STATS ROW ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 48px;
+  }
+
+  .stat-cell {
+    background: var(--bg2);
+    padding: 28px 32px;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.gold { color: var(--gold); }
+  .stat-value.green { color: var(--success); }
+
+  /* ── HE3 EXPLANATION ── */
+  .he3-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .he3-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .he3-card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .he3-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .he3-card p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── CONTRACT INFO ── */
+  .contract-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-top: 32px;
+  }
+
+  .contract-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contract-row:last-child { border-bottom: none; }
+
+  .contract-key {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .contract-val {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .basescan-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  .basescan-link:hover { text-decoration: underline; }
+
+  /* ── HOW TO BUY ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 48px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 28px 32px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(0,194,255,0.1);
+    border: 1px solid rgba(0,194,255,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .step-content a { color: var(--accent); text-decoration: none; }
+  .step-content a:hover { text-decoration: underline; }
+
+  /* ── BOTTOM BUY ── */
+  .bottom-buy {
+    text-align: center;
+    padding: 80px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .bottom-buy h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .bottom-buy p {
+    font-size: 17px;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-left {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── WALLET BADGE ── */
+  .wallet-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    margin-bottom: 16px;
+  }
+
+  .wallet-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .wallet-dot.connected { background: var(--success); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-size: 14px;
+    z-index: 999;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--success); color: var(--success); }
+  .toast.error { border-color: var(--danger); color: var(--danger); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .he3-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .hero { padding: 100px 20px 60px; }
+    .buy-widget { padding: 24px 20px; }
+    .contract-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .bottom-buy { padding: 60px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  .price-divider {
+    font-size: 24px;
+    color: var(--muted);
+    align-self: center;
+    padding: 0 8px;
+  }
+
+  .price-ref-large {
+    font-family: var(--font-mono);
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 700;
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,77,77,0.5);
+  }
+
+  .price-badge {
+    align-self: center;
+    background: rgba(0,214,143,0.12);
+    border: 1px solid rgba(0,214,143,0.3);
+    color: var(--success);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .discount-line {
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
+
+  .discount-line strong {
+    color: var(--success);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">HE3<span>.spot</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#token">Token</a></li>
+    <li><a href="#how">How to Buy</a></li>
+    <li><a href="#buy" class="nav-buy">Buy HE3</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Live on Base Mainnet</div>
+    <h1>The World's First<br><em>Helium-3 Market</em></h1>
+    <p class="hero-sub">
+      1 HE3 = 1 gram of lunar Helium-3. The only liquid instrument
+      for He-3 price exposure in existence. Fixed supply.
+    </p>
+
+    <div class="price-display">
+      <div>
+        <div class="price-label">Current Price</div>
+        <div class="price-value">$200.00</div>
+      </div>
+      <div class="price-divider">→</div>
+      <div>
+        <div class="price-label">He-3 Spot Value</div>
+        <div class="price-ref-large">$20,000</div>
+      </div>
+      <div class="price-badge">1% of spot</div>
+    </div>
+    <p class="discount-line">You are buying at <strong>1% of the reference price</strong> of 1 gram of lunar Helium-3.</p>
+
+    <!-- BUY WIDGET HERO -->
+    <div class="buy-widget" id="buy">
+      <div class="buy-widget-title">Buy HE3 Tokens</div>
+
+      <div class="wallet-badge" id="walletBadge">
+        <span class="wallet-dot" id="walletDot"></span>
+        <span id="walletText">Not connected</span>
+      </div>
+
+      <div class="input-group">
+        <label for="tokenAmount">Amount (HE3)</label>
+        <input
+          type="number"
+          id="tokenAmount"
+          placeholder="e.g. 0.5"
+          min="0.01"
+          step="0.01"
+        />
+      </div>
+
+      <div class="cost-preview">
+        <span class="cost-preview-label">You pay (USDC)</span>
+        <span class="cost-preview-value" id="costPreview">—</span>
+      </div>
+
+      <button class="btn btn-primary" id="connectBtn">Connect Wallet</button>
+      <button class="btn btn-primary" id="buyBtn" style="display:none;" disabled>Buy HE3</button>
+      <button class="btn btn-secondary" id="disconnectBtn" style="display:none;">Disconnect</button>
+
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- LIVE STATS -->
+<section>
+  <div class="section-eyebrow">Live Data</div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-label">Token Price</div>
+      <div class="stat-value gold" id="statPrice">$200.00</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Reference Value</div>
+      <div class="stat-value accent">$20,000 / g</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Total Supply</div>
+      <div class="stat-value">10,000,000</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Available Now</div>
+      <div class="stat-value green" id="statSupply">Loading…</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Network</div>
+      <div class="stat-value accent">Base</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Discount to Spot</div>
+      <div class="stat-value green">99%</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT HE3 -->
+<section id="about">
+  <div class="section-eyebrow">What is Helium-3</div>
+  <h2 class="section-title">The fuel of the future<br>is sitting on the Moon</h2>
+  <p class="section-body">
+    Helium-3 is a rare isotope that barely exists on Earth but is abundant on the lunar surface.
+    Scientists have long identified it as an ideal fuel for nuclear fusion — a clean, efficient
+    energy source with no radioactive waste. At roughly $20,000 per gram, it is one of the most
+    valuable substances known to science.
+  </p>
+
+  <div class="he3-grid">
+    <div class="he3-card">
+      <div class="he3-card-icon">☀️</div>
+      <h3>Clean Fusion Fuel</h3>
+      <p>He-3 enables aneutronic fusion reactions — producing power with no radioactive byproducts. It is the most efficient fuel candidate for next-generation fusion reactors.</p>
+    </div>
+    <div class="he3-card">
+      <div class="he3-card-icon">🌕</div>
+      <h3>Lunar Abundance</h3>
+      <p>The solar wind has deposited He-3 onto the Moon's surface for billions of years. NASA, SpaceX, and China's space program are all actively pursuing lunar resource extraction.</p>
+    </div>
+    <div class="he3-card">
+      <div class="he3-card-icon">💎</div>
+      <h3>Extreme Scarcity on Earth</h3>
+      <p>Earth's atmosphere contains barely any He-3. Current global supply is measured in kilograms per year — nowhere near enough to power a fusion economy.</p>
+    </div>
+    <div class="he3-card">
+      <div class="he3-card-icon">📈</div>
+      <h3>No Liquid Market Existed</h3>
+      <p>Until HE3, there was no way to gain financial exposure to Helium-3. No futures, no ETF, no index. HE3 is the first and only instrument that tracks He-3 price sentiment.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TOKEN -->
+<section id="token">
+  <div class="section-eyebrow">The Instrument</div>
+  <h2 class="section-title">One token.<br>One gram.</h2>
+  <p class="section-body">
+    HE3 is a fixed-supply ERC-20 token on Base. Each token represents
+    one gram of lunar Helium-3 as a price reference instrument.
+    The first and only liquid He-3 market in existence.
+  </p>
+
+  <div class="contract-block" id="token">
+    <div class="contract-row">
+      <span class="contract-key">Token Name</span>
+      <span class="contract-val">Helium-3 (HE3)</span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Network</span>
+      <span class="contract-val">Base Mainnet (Chain ID 8453)</span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Total Supply</span>
+      <span class="contract-val">10,000,000 HE3 — fixed forever</span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Decimals</span>
+      <span class="contract-val">18</span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Token Contract</span>
+      <span class="contract-val">
+        <span id="tokenAddrShort">0x59ee...4908e</span>
+        <button class="copy-btn" onclick="copyAddr('0x59ee400Cc7D040F83753113D4B606364F474908e')">Copy</button>
+        <a class="basescan-link" href="https://basescan.org/address/0x59ee400Cc7D040F83753113D4B606364F474908e" target="_blank">Basescan ↗</a>
+      </span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Sale Contract</span>
+      <span class="contract-val">
+        <span>0xee23...d12a9</span>
+        <button class="copy-btn" onclick="copyAddr('0xee23393642D9469b6461ed47Ebf869f9316d12a9')">Copy</button>
+        <a class="basescan-link" href="https://basescan.org/address/0xee23393642D9469b6461ed47Ebf869f9316d12a9" target="_blank">Basescan ↗</a>
+      </span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Payment</span>
+      <span class="contract-val">USDC on Base only</span>
+    </div>
+    <div class="contract-row">
+      <span class="contract-key">Minting</span>
+      <span class="contract-val" style="color: var(--success);">Disabled — supply is fixed</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HOW TO BUY -->
+<section id="how">
+  <div class="section-eyebrow">How to Buy</div>
+  <h2 class="section-title">Get HE3 in<br>four steps</h2>
+  <p class="section-body">
+    You need MetaMask and USDC on the Base network. Takes about five minutes to set up if you're starting fresh.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <div class="step-content">
+        <h4>Install MetaMask</h4>
+        <p>Download <a href="https://metamask.io" target="_blank">MetaMask</a> as a browser extension or mobile app. Create a wallet and store your seed phrase safely offline.</p>
+      </div>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <div class="step-content">
+        <h4>Switch to Base Network</h4>
+        <p>In MetaMask, click the network dropdown and select Base. If it's not listed, add it: Chain ID 8453, RPC https://mainnet.base.org. Gas fees on Base are fractions of a cent.</p>
+      </div>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <div class="step-content">
+        <h4>Get USDC on Base</h4>
+        <p>Buy USDC on <a href="https://coinbase.com" target="_blank">Coinbase</a> and withdraw directly to Base network, or bridge from Ethereum at <a href="https://bridge.base.org" target="_blank">bridge.base.org</a>. You need USDC — not ETH — to buy HE3. Keep a small amount of ETH for gas.</p>
+      </div>
+    </div>
+    <div class="step">
+      <span class="step-num">04</span>
+      <div class="step-content">
+        <h4>Connect and Buy</h4>
+        <p>Click Connect Wallet above, enter how many HE3 tokens you want, and confirm two transactions in MetaMask: first to approve USDC spending, then to complete the purchase. HE3 arrives in your wallet instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- BOTTOM BUY CTA -->
+<div class="bottom-buy">
+  <h2>The He-3 market<br>starts here.</h2>
+  <p>First liquid He-3 instrument in existence. 10,000,000 tokens. Fixed supply forever.</p>
+  <div class="buy-widget" style="margin: 0 auto;">
+    <div class="buy-widget-title">Buy HE3 Tokens</div>
+    <div class="wallet-badge" id="walletBadge2">
+      <span class="wallet-dot" id="walletDot2"></span>
+      <span id="walletText2">Not connected</span>
+    </div>
+    <div class="input-group">
+      <label for="tokenAmount2">Amount (HE3)</label>
+      <input type="number" id="tokenAmount2" placeholder="e.g. 1.0" min="0.01" step="0.01" />
+    </div>
+    <div class="cost-preview">
+      <span class="cost-preview-label">You pay (USDC)</span>
+      <span class="cost-preview-value" id="costPreview2">—</span>
+    </div>
+    <button class="btn btn-primary" id="connectBtn2">Connect Wallet</button>
+    <button class="btn btn-primary" id="buyBtn2" style="display:none;" disabled>Buy HE3</button>
+    <div class="status-msg" id="statusMsg2"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    HE3 · Base Mainnet · he3spot.com
+  </div>
+  <div class="footer-links">
+    <a href="https://basescan.org/address/0x59ee400Cc7D040F83753113D4B606364F474908e" target="_blank">Token Contract</a>
+    <a href="https://basescan.org/address/0xee23393642D9469b6461ed47Ebf869f9316d12a9" target="_blank">Sale Contract</a>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ETHERS.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+const HE3_TOKEN_ADDR = "0x59ee400Cc7D040F83753113D4B606364F474908e";
+const HE3_SALE_ADDR  = "0xee23393642D9469b6461ed47Ebf869f9316d12a9";
+const USDC_ADDR      = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+const BASE_CHAIN_ID  = 8453n;
+const BASE_CHAIN_HEX = "0x2105";
+
+const HE3_SALE_ABI = [
+  "function buyTokens(uint256 he3Wei, uint256 maxTotalCost) external",
+  "function pricePerToken() view returns (uint256)",
+  "function availableSupply() view returns (uint256)",
+  "function calculateCost(uint256 he3Wei) view returns (uint256)",
+  "function paused() view returns (bool)"
+];
+
+const ERC20_ABI = [
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function balanceOf(address account) view returns (uint256)"
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let provider = null;
+let signer   = null;
+let userAddr = null;
+
+// ── UTILS ──────────────────────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => { t.className = 'toast'; }, 3500);
+}
+
+function setStatus(id, msg, type = '') {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = `status-msg ${type}`;
+}
+
+function copyAddr(addr) {
+  navigator.clipboard.writeText(addr);
+  showToast('Address copied to clipboard', 'success');
+}
+
+function formatUSDC(raw) {
+  return '$' + (Number(raw) / 1e6).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function updateWalletUI(connected) {
+  ['', '2'].forEach(suffix => {
+    const dot  = document.getElementById(`walletDot${suffix}`);
+    const text = document.getElementById(`walletText${suffix}`);
+    const cBtn = document.getElementById(`connectBtn${suffix}`);
+    const bBtn = document.getElementById(`buyBtn${suffix}`);
+    const dBtn = document.getElementById(`disconnectBtn${suffix}`);
+
+    if (connected) {
+      dot.classList.add('connected');
+      text.textContent = userAddr.slice(0, 6) + '...' + userAddr.slice(-4);
+      cBtn.style.display = 'none';
+      bBtn.style.display = 'block';
+      if (dBtn) dBtn.style.display = 'block';
+    } else {
+      dot.classList.remove('connected');
+      text.textContent = 'Not connected';
+      cBtn.style.display = 'block';
+      bBtn.style.display = 'none';
+      if (dBtn) dBtn.style.display = 'none';
+    }
+  });
+}
+
+// ── LIVE STATS ─────────────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const rpc = new ethers.JsonRpcProvider("https://base.llamarpc.com");
+    const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
+
+    const [price, supply] = await Promise.all([
+      sale.pricePerToken(),
+      sale.availableSupply()
+    ]);
+
+    const priceUSD = Number(price) / 1e6;
+    document.getElementById('statPrice').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    document.getElementById('statSupply').textContent = Number(supply).toLocaleString('en-US');
+
+    // Update hero price display
+    document.querySelector('.price-value').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
+  } catch(e) {
+    document.getElementById('statSupply').textContent = 'See Basescan';
+  }
+}
+
+// ── COST PREVIEW ───────────────────────────────────────────────────────────
+async function updateCostPreview(amountStr, previewId) {
+  const el = document.getElementById(previewId);
+  const amount = parseFloat(amountStr);
+  if (!amountStr || isNaN(amount) || amount < 0.01) {
+    el.textContent = '—';
+    return;
+  }
+  try {
+    const rpc = new ethers.JsonRpcProvider("https://base.llamarpc.com");
+    const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
+    const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
+    const cost = await sale.calculateCost(he3Wei);
+    el.textContent = formatUSDC(cost);
+  } catch(e) {
+    el.textContent = '—';
+  }
+}
+
+document.getElementById('tokenAmount').addEventListener('input', e => {
+  updateCostPreview(e.target.value, 'costPreview');
+  const btn = document.getElementById('buyBtn');
+  if (btn) btn.disabled = !e.target.value || parseFloat(e.target.value) < 0.01;
+});
+
+document.getElementById('tokenAmount2').addEventListener('input', e => {
+  updateCostPreview(e.target.value, 'costPreview2');
+  const btn = document.getElementById('buyBtn2');
+  if (btn) btn.disabled = !e.target.value || parseFloat(e.target.value) < 0.01;
+});
+
+// ── CONNECT ────────────────────────────────────────────────────────────────
+async function connectWallet() {
+  if (!window.ethereum) {
+    showToast('MetaMask not found. Please install it.', 'error');
+    return;
+  }
+  try {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    const network = await provider.getNetwork();
+
+    if (network.chainId !== BASE_CHAIN_ID) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: BASE_CHAIN_HEX }]
+        });
+      } catch(switchErr) {
+        if (switchErr.code === 4902) {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+              chainId: BASE_CHAIN_HEX,
+              chainName: 'Base',
+              nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+              rpcUrls: ['https://mainnet.base.org'],
+              blockExplorerUrls: ['https://basescan.org']
+            }]
+          });
+        } else throw switchErr;
+      }
+      provider = new ethers.BrowserProvider(window.ethereum);
+    }
+
+    await provider.send("eth_requestAccounts", []);
+    signer = await provider.getSigner();
+    userAddr = await signer.getAddress();
+    updateWalletUI(true);
+    showToast('Wallet connected', 'success');
+    setStatus('statusMsg', '', '');
+    setStatus('statusMsg2', '', '');
+  } catch(e) {
+    showToast('Connection failed: ' + (e.message || e), 'error');
+  }
+}
+
+// ── BUY ────────────────────────────────────────────────────────────────────
+async function buyTokens(amountInputId, statusId) {
+  const amountStr = document.getElementById(amountInputId).value;
+  const amount = parseFloat(amountStr);
+
+  if (!signer) { showToast('Connect your wallet first', 'error'); return; }
+  if (!amountStr || isNaN(amount) || amount < 0.01) {
+    setStatus(statusId, 'Minimum purchase is 0.01 HE3', 'error');
+    return;
+  }
+
+  const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
+
+  try {
+    setStatus(statusId, 'Calculating cost…', 'loading');
+
+    const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, signer);
+    const usdc = new ethers.Contract(USDC_ADDR, ERC20_ABI, signer);
+
+    // Check if paused
+    const paused = await sale.paused();
+    if (paused) {
+      setStatus(statusId, 'Sales are currently paused. Check back soon.', 'error');
+      return;
+    }
+
+    // Get cost
+    const cost = await sale.calculateCost(he3Wei);
+    const maxCost = cost * 101n / 100n; // 1% slippage buffer
+
+    // Check USDC balance
+    const usdcBalance = await usdc.balanceOf(userAddr);
+    if (usdcBalance < cost) {
+      setStatus(statusId, `Insufficient USDC. You need ${formatUSDC(cost)} but have ${formatUSDC(usdcBalance)}.`, 'error');
+      return;
+    }
+
+    // Check allowance
+    setStatus(statusId, 'Step 1 of 2 — Approve USDC spending…', 'loading');
+    const allowance = await usdc.allowance(userAddr, HE3_SALE_ADDR);
+
+    if (allowance < cost) {
+      const approveTx = await usdc.approve(HE3_SALE_ADDR, maxCost);
+      setStatus(statusId, 'Approving USDC — waiting for confirmation…', 'loading');
+      await approveTx.wait();
+    }
+
+    // Buy
+    setStatus(statusId, 'Step 2 of 2 — Confirm purchase in MetaMask…', 'loading');
+    const buyTx = await sale.buyTokens(he3Wei, maxCost);
+    setStatus(statusId, 'Transaction submitted — waiting for confirmation…', 'loading');
+    await buyTx.wait();
+
+    setStatus(statusId, `✓ Success! ${amount} HE3 is now in your wallet.`, 'success');
+    showToast(`Purchased ${amount} HE3 successfully`, 'success');
+    document.getElementById(amountInputId).value = '';
+    document.getElementById(amountInputId === 'tokenAmount' ? 'costPreview' : 'costPreview2').textContent = '—';
+    loadStats();
+
+  } catch(e) {
+    const msg = e?.reason || e?.message || 'Transaction failed';
+    setStatus(statusId, msg.length > 80 ? msg.slice(0, 80) + '…' : msg, 'error');
+    showToast('Transaction failed', 'error');
+  }
+}
+
+// ── DISCONNECT ─────────────────────────────────────────────────────────────
+function disconnect() {
+  provider = null; signer = null; userAddr = null;
+  updateWalletUI(false);
+  showToast('Wallet disconnected');
+}
+
+// ── EVENT LISTENERS ────────────────────────────────────────────────────────
+document.getElementById('connectBtn').addEventListener('click', connectWallet);
+document.getElementById('connectBtn2').addEventListener('click', connectWallet);
+document.getElementById('buyBtn').addEventListener('click', () => buyTokens('tokenAmount', 'statusMsg'));
+document.getElementById('buyBtn2').addEventListener('click', () => buyTokens('tokenAmount2', 'statusMsg2'));
+document.getElementById('disconnectBtn')?.addEventListener('click', disconnect);
+
+// Auto-reconnect if already connected
+if (window.ethereum) {
+  window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+    if (accounts.length > 0) connectWallet();
+  });
+  window.ethereum.on('accountsChanged', accounts => {
+    if (accounts.length === 0) disconnect();
+    else connectWallet();
+  });
+  window.ethereum.on('chainChanged', () => window.location.reload());
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+loadStats();
+setInterval(loadStats, 30000); // refresh every 30s
+</script>
+</body>
+</html>
