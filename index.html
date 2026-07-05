@@ -1046,37 +1046,33 @@ function updateWalletUI(connected) {
 }
 
 // ── LIVE STATS ─────────────────────────────────────────────────────────────
-const RPC_URLS = [
-  "https://rpc.ankr.com/base",
-  "https://base.blockpi.network/v1/rpc/public",
-  "https://1rpc.io/base",
-  "https://base.meowrpc.com"
-];
-let _rpc = null;
-async function getRpc() {
-  if (_rpc) { try { await _rpc.getBlockNumber(); return _rpc; } catch(e) { _rpc = null; } }
-  for (const url of RPC_URLS) {
-    try {
-      const p = new ethers.JsonRpcProvider(url);
-      await Promise.race([p.getBlockNumber(), new Promise((_,r)=>setTimeout(()=>r(new Error),3000))]);
-      _rpc = p; return _rpc;
-    } catch(e) { continue; }
-  }
+// Fallback price shown before wallet connects. Contract is the source of
+// truth once connected. UPDATE THIS whenever you call setPrice on-chain.
+const FALLBACK_PRICE_USD = 200;
+let livePriceUSD = FALLBACK_PRICE_USD;
+
+// Reads go through MetaMask's provider — no CORS issues, no public RPC needed.
+function getReadProvider() {
+  if (provider) return provider;
+  if (window.ethereum) return new ethers.BrowserProvider(window.ethereum);
   return null;
 }
 
 async function loadStats() {
   try {
-    const rpc = await getRpc();
-    if (!rpc) { document.getElementById('statSupply').textContent = 'See Basescan'; return; }
+    const rpc = getReadProvider();
+    if (!rpc) {
+      document.getElementById('statSupply').textContent = 'Connect wallet to view';
+      return;
+    }
     const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
     const [price, supply] = await Promise.all([sale.pricePerToken(), sale.availableSupply()]);
-    const priceUSD = Number(price) / 1e6;
-    document.getElementById('statPrice').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    livePriceUSD = Number(price) / 1e6;
+    document.getElementById('statPrice').textContent = '$' + livePriceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
     document.getElementById('statSupply').textContent = Number(supply).toLocaleString('en-US');
-    document.querySelector('.price-value').textContent = '$' + priceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    document.querySelector('.price-value').textContent = '$' + livePriceUSD.toLocaleString('en-US', { minimumFractionDigits: 2 });
   } catch(e) {
-    document.getElementById('statSupply').textContent = 'See Basescan';
+    document.getElementById('statSupply').textContent = 'Connect wallet to view';
   }
 }
 
@@ -1085,22 +1081,19 @@ async function updateCostPreview(amountStr, previewId) {
   const el = document.getElementById(previewId);
   const amount = parseFloat(amountStr);
   if (!amountStr || isNaN(amount) || amount < 0.01) { el.textContent = '—'; return; }
+
+  // Instant local estimate — always displays immediately
+  el.textContent = '$' + (amount * livePriceUSD).toLocaleString('en-US', {minimumFractionDigits: 2});
+
+  // Refine with exact on-chain cost when a provider is available
   try {
-    const rpc = await getRpc();
-    if (rpc) {
-      const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
-      const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
-      const cost = await sale.calculateCost(he3Wei);
-      el.textContent = formatUSDC(cost);
-    } else {
-      // Local fallback: price per token is $200 = 200000000 USDC units
-      const PRICE_PER_TOKEN = 200; // update if price changes
-      el.textContent = '$' + (amount * PRICE_PER_TOKEN).toLocaleString('en-US', {minimumFractionDigits: 2});
-    }
-  } catch(e) {
-    const PRICE_PER_TOKEN = 200;
-    el.textContent = '$' + (amount * PRICE_PER_TOKEN).toLocaleString('en-US', {minimumFractionDigits: 2});
-  }
+    const rpc = getReadProvider();
+    if (!rpc) return;
+    const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, rpc);
+    const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
+    const cost = await sale.calculateCost(he3Wei);
+    el.textContent = formatUSDC(cost);
+  } catch(e) { /* local estimate already shown */ }
 }
 
 document.getElementById('tokenAmount').addEventListener('input', e => {
