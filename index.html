@@ -36,7 +36,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── GRID OVERLAY (signature element) ── */
   body::before {
     content: '';
     position: fixed;
@@ -49,7 +48,6 @@
     z-index: 0;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -100,7 +98,6 @@
 
   .nav-buy:hover { background: #00AADD !important; color: var(--bg) !important; }
 
-  /* ── HERO ── */
   .hero {
     position: relative;
     min-height: 100vh;
@@ -163,7 +160,6 @@
     line-height: 1.7;
   }
 
-  /* ── PRICE DISPLAY ── */
   .price-display {
     display: inline-flex;
     align-items: baseline;
@@ -198,7 +194,6 @@
 
   .price-ref span { color: var(--success); }
 
-  /* ── BUY WIDGET ── */
   .buy-widget {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -244,7 +239,6 @@
   }
 
   .input-group input:focus { border-color: var(--accent); }
-
   .input-group input::placeholder { color: var(--muted); }
 
   .cost-preview {
@@ -280,20 +274,14 @@
     letter-spacing: 0.02em;
   }
 
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
 
   .btn-primary:hover:not(:disabled) {
     background: #00AADD;
     transform: translateY(-1px);
   }
 
-  .btn-primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-secondary {
     background: transparent;
@@ -316,7 +304,6 @@
   .status-msg.error { color: var(--danger); }
   .status-msg.loading { color: var(--accent); }
 
-  /* ── SECTIONS ── */
   section {
     position: relative;
     z-index: 1;
@@ -355,10 +342,10 @@
     margin: 0;
   }
 
-  /* ── STATS ROW ── */
+  /* ── STATS GRID: 3 columns, 2 rows ── */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: var(--border);
     border: 1px solid var(--border);
@@ -392,7 +379,6 @@
   .stat-value.gold { color: var(--gold); }
   .stat-value.green { color: var(--success); }
 
-  /* ── HE3 EXPLANATION ── */
   .he3-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -407,24 +393,12 @@
     padding: 28px;
   }
 
-  .he3-card-icon {
-    font-size: 28px;
-    margin-bottom: 16px;
-  }
+  .he3-card-icon { font-size: 28px; margin-bottom: 16px; }
 
-  .he3-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
+  .he3-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
 
-  .he3-card p {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+  .he3-card p { font-size: 15px; color: var(--muted); line-height: 1.7; }
 
-  /* ── CONTRACT INFO ── */
   .contract-block {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -483,7 +457,6 @@
 
   .basescan-link:hover { text-decoration: underline; }
 
-  /* ── HOW TO BUY ── */
   .steps {
     display: flex;
     flex-direction: column;
@@ -518,22 +491,13 @@
     margin-top: 2px;
   }
 
-  .step-content h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
+  .step-content h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
 
-  .step-content p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-  }
+  .step-content p { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
   .step-content a { color: var(--accent); text-decoration: none; }
   .step-content a:hover { text-decoration: underline; }
 
-  /* ── BOTTOM BUY ── */
   .bottom-buy {
     text-align: center;
     padding: 80px 40px;
@@ -548,13 +512,8 @@
     margin-bottom: 16px;
   }
 
-  .bottom-buy p {
-    font-size: 17px;
-    color: var(--muted);
-    margin-bottom: 40px;
-  }
+  .bottom-buy p { font-size: 17px; color: var(--muted); margin-bottom: 40px; }
 
-  /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border);
     padding: 32px 40px;
@@ -571,10 +530,7 @@
     color: var(--muted);
   }
 
-  .footer-links {
-    display: flex;
-    gap: 24px;
-  }
+  .footer-links { display: flex; gap: 24px; }
 
   .footer-links a {
     font-family: var(--font-mono);
@@ -586,7 +542,6 @@
 
   .footer-links a:hover { color: var(--accent); }
 
-  /* ── WALLET BADGE ── */
   .wallet-badge {
     display: inline-flex;
     align-items: center;
@@ -601,15 +556,9 @@
     margin-bottom: 16px;
   }
 
-  .wallet-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--muted);
-  }
-
+  .wallet-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
   .wallet-dot.connected { background: var(--success); }
 
-  /* ── TOAST ── */
   .toast {
     position: fixed;
     bottom: 32px;
@@ -629,12 +578,12 @@
   .toast.success { border-color: var(--success); color: var(--success); }
   .toast.error { border-color: var(--danger); color: var(--danger); }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 16px 20px; }
     .nav-links { display: none; }
     section { padding: 60px 20px; }
     .he3-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
     footer { flex-direction: column; gap: 16px; text-align: center; }
     .hero { padding: 100px 20px 60px; }
     .buy-widget { padding: 24px 20px; }
@@ -646,12 +595,7 @@
     * { animation: none !important; transition: none !important; }
   }
 
-  .price-divider {
-    font-size: 24px;
-    color: var(--muted);
-    align-self: center;
-    padding: 0 8px;
-  }
+  .price-divider { font-size: 24px; color: var(--muted); align-self: center; padding: 0 8px; }
 
   .price-ref-large {
     font-family: var(--font-mono);
@@ -676,22 +620,12 @@
     white-space: nowrap;
   }
 
-  .discount-line {
-    font-size: 15px;
-    color: var(--muted);
-    margin-top: 16px;
-    margin-bottom: 0;
-  }
-
-  .discount-line strong {
-    color: var(--success);
-    font-weight: 600;
-  }
+  .discount-line { font-size: 15px; color: var(--muted); margin-top: 16px; margin-bottom: 0; }
+  .discount-line strong { color: var(--success); font-weight: 600; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a class="nav-logo" href="#">HE3<span>.spot</span></a>
   <ul class="nav-links">
@@ -702,7 +636,6 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Live on Base Mainnet</div>
@@ -726,35 +659,23 @@
     </div>
     <p class="discount-line">You are buying at <strong>1% of the reference price</strong> of 1 gram of lunar Helium-3.</p>
 
-    <!-- BUY WIDGET HERO -->
     <div class="buy-widget" id="buy">
       <div class="buy-widget-title">Buy HE3 Tokens</div>
-
       <div class="wallet-badge" id="walletBadge">
         <span class="wallet-dot" id="walletDot"></span>
         <span id="walletText">Not connected</span>
       </div>
-
       <div class="input-group">
         <label for="tokenAmount">Amount (HE3)</label>
-        <input
-          type="number"
-          id="tokenAmount"
-          placeholder="e.g. 0.5"
-          min="0.01"
-          step="0.01"
-        />
+        <input type="number" id="tokenAmount" placeholder="e.g. 0.5" min="0.01" step="0.01" />
       </div>
-
       <div class="cost-preview">
         <span class="cost-preview-label">You pay (USDC)</span>
         <span class="cost-preview-value" id="costPreview">—</span>
       </div>
-
       <button class="btn btn-primary" id="connectBtn">Connect Wallet</button>
       <button class="btn btn-primary" id="buyBtn" style="display:none;" disabled>Buy HE3</button>
       <button class="btn btn-secondary" id="disconnectBtn" style="display:none;">Disconnect</button>
-
       <div class="status-msg" id="statusMsg"></div>
     </div>
   </div>
@@ -762,7 +683,6 @@
 
 <hr class="divider">
 
-<!-- LIVE STATS -->
 <section>
   <div class="section-eyebrow">Live Data</div>
   <div class="stats-grid">
@@ -795,7 +715,6 @@
 
 <hr class="divider">
 
-<!-- ABOUT HE3 -->
 <section id="about">
   <div class="section-eyebrow">What is Helium-3</div>
   <h2 class="section-title">The fuel of the future<br>is sitting on the Moon</h2>
@@ -805,7 +724,6 @@
     energy source with no radioactive waste. At roughly $20,000 per gram, it is one of the most
     valuable substances known to science.
   </p>
-
   <div class="he3-grid">
     <div class="he3-card">
       <div class="he3-card-icon">☀️</div>
@@ -832,7 +750,6 @@
 
 <hr class="divider">
 
-<!-- TOKEN -->
 <section id="token">
   <div class="section-eyebrow">The Instrument</div>
   <h2 class="section-title">One token.<br>One gram.</h2>
@@ -841,8 +758,7 @@
     one gram of lunar Helium-3 as a price reference instrument.
     The first and only liquid He-3 market in existence.
   </p>
-
-  <div class="contract-block" id="token">
+  <div class="contract-block">
     <div class="contract-row">
       <span class="contract-key">Token Name</span>
       <span class="contract-val">Helium-3 (HE3)</span>
@@ -888,14 +804,12 @@
 
 <hr class="divider">
 
-<!-- HOW TO BUY -->
 <section id="how">
   <div class="section-eyebrow">How to Buy</div>
   <h2 class="section-title">Get HE3 in<br>four steps</h2>
   <p class="section-body">
     You need MetaMask and USDC on the Base network. Takes about five minutes to set up if you're starting fresh.
   </p>
-
   <div class="steps">
     <div class="step">
       <span class="step-num">01</span>
@@ -930,7 +844,6 @@
 
 <hr class="divider">
 
-<!-- BOTTOM BUY CTA -->
 <div class="bottom-buy">
   <h2>The He-3 market<br>starts here.</h2>
   <p>First liquid He-3 instrument in existence. 10,000,000 tokens. Fixed supply forever.</p>
@@ -954,25 +867,19 @@
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-left">
-    HE3 · Base Mainnet · he3spot.com
-  </div>
+  <div class="footer-left">HE3 · Base Mainnet · he3spot.com</div>
   <div class="footer-links">
     <a href="https://basescan.org/address/0x59ee400Cc7D040F83753113D4B606364F474908e" target="_blank">Token Contract</a>
     <a href="https://basescan.org/address/0xee23393642D9469b6461ed47Ebf869f9316d12a9" target="_blank">Sale Contract</a>
   </div>
 </footer>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ETHERS.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────────────────────────────────
 const HE3_TOKEN_ADDR = "0x59ee400Cc7D040F83753113D4B606364F474908e";
 const HE3_SALE_ADDR  = "0xee23393642D9469b6461ed47Ebf869f9316d12a9";
 const USDC_ADDR      = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
@@ -993,12 +900,10 @@ const ERC20_ABI = [
   "function balanceOf(address account) view returns (uint256)"
 ];
 
-// ── STATE ──────────────────────────────────────────────────────────────────
 let provider = null;
 let signer   = null;
 let userAddr = null;
 
-// ── UTILS ──────────────────────────────────────────────────────────────────
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1045,13 +950,9 @@ function updateWalletUI(connected) {
   });
 }
 
-// ── LIVE STATS ─────────────────────────────────────────────────────────────
-// Fallback price shown before wallet connects. Contract is the source of
-// truth once connected. UPDATE THIS whenever you call setPrice on-chain.
 const FALLBACK_PRICE_USD = 200;
 let livePriceUSD = FALLBACK_PRICE_USD;
 
-// Reads go through MetaMask's provider — no CORS issues, no public RPC needed.
 function getReadProvider() {
   if (provider) return provider;
   if (window.ethereum) return new ethers.BrowserProvider(window.ethereum);
@@ -1076,16 +977,11 @@ async function loadStats() {
   }
 }
 
-// ── COST PREVIEW ───────────────────────────────────────────────────────────
 async function updateCostPreview(amountStr, previewId) {
   const el = document.getElementById(previewId);
   const amount = parseFloat(amountStr);
   if (!amountStr || isNaN(amount) || amount < 0.01) { el.textContent = '—'; return; }
-
-  // Instant local estimate — always displays immediately
   el.textContent = '$' + (amount * livePriceUSD).toLocaleString('en-US', {minimumFractionDigits: 2});
-
-  // Refine with exact on-chain cost when a provider is available
   try {
     const rpc = getReadProvider();
     if (!rpc) return;
@@ -1093,7 +989,7 @@ async function updateCostPreview(amountStr, previewId) {
     const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
     const cost = await sale.calculateCost(he3Wei);
     el.textContent = formatUSDC(cost);
-  } catch(e) { /* local estimate already shown */ }
+  } catch(e) {}
 }
 
 document.getElementById('tokenAmount').addEventListener('input', e => {
@@ -1108,7 +1004,6 @@ document.getElementById('tokenAmount2').addEventListener('input', e => {
   if (btn) btn.disabled = !e.target.value || parseFloat(e.target.value) < 0.01;
 });
 
-// ── CONNECT ────────────────────────────────────────────────────────────────
 async function connectWallet() {
   if (!window.ethereum) {
     showToast('MetaMask not found. Please install it.', 'error');
@@ -1117,30 +1012,19 @@ async function connectWallet() {
   try {
     provider = new ethers.BrowserProvider(window.ethereum);
     const network = await provider.getNetwork();
-
     if (network.chainId !== BASE_CHAIN_ID) {
       try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: BASE_CHAIN_HEX }]
-        });
+        await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: BASE_CHAIN_HEX }] });
       } catch(switchErr) {
         if (switchErr.code === 4902) {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
-            params: [{
-              chainId: BASE_CHAIN_HEX,
-              chainName: 'Base',
-              nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-              rpcUrls: ['https://mainnet.base.org'],
-              blockExplorerUrls: ['https://basescan.org']
-            }]
+            params: [{ chainId: BASE_CHAIN_HEX, chainName: 'Base', nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://mainnet.base.org'], blockExplorerUrls: ['https://basescan.org'] }]
           });
         } else throw switchErr;
       }
       provider = new ethers.BrowserProvider(window.ethereum);
     }
-
     await provider.send("eth_requestAccounts", []);
     signer = await provider.getSigner();
     userAddr = await signer.getAddress();
@@ -1153,65 +1037,38 @@ async function connectWallet() {
   }
 }
 
-// ── BUY ────────────────────────────────────────────────────────────────────
 async function buyTokens(amountInputId, statusId) {
   const amountStr = document.getElementById(amountInputId).value;
   const amount = parseFloat(amountStr);
-
   if (!signer) { showToast('Connect your wallet first', 'error'); return; }
-  if (!amountStr || isNaN(amount) || amount < 0.01) {
-    setStatus(statusId, 'Minimum purchase is 0.01 HE3', 'error');
-    return;
-  }
-
+  if (!amountStr || isNaN(amount) || amount < 0.01) { setStatus(statusId, 'Minimum purchase is 0.01 HE3', 'error'); return; }
   const he3Wei = ethers.parseUnits(amount.toFixed(18), 18);
-
   try {
     setStatus(statusId, 'Calculating cost…', 'loading');
-
     const sale = new ethers.Contract(HE3_SALE_ADDR, HE3_SALE_ABI, signer);
     const usdc = new ethers.Contract(USDC_ADDR, ERC20_ABI, signer);
-
-    // Check if paused
     const paused = await sale.paused();
-    if (paused) {
-      setStatus(statusId, 'Sales are currently paused. Check back soon.', 'error');
-      return;
-    }
-
-    // Get cost
+    if (paused) { setStatus(statusId, 'Sales are currently paused. Check back soon.', 'error'); return; }
     const cost = await sale.calculateCost(he3Wei);
-    const maxCost = cost * 101n / 100n; // 1% slippage buffer
-
-    // Check USDC balance
+    const maxCost = cost * 101n / 100n;
     const usdcBalance = await usdc.balanceOf(userAddr);
-    if (usdcBalance < cost) {
-      setStatus(statusId, `Insufficient USDC. You need ${formatUSDC(cost)} but have ${formatUSDC(usdcBalance)}.`, 'error');
-      return;
-    }
-
-    // Check allowance
+    if (usdcBalance < cost) { setStatus(statusId, `Insufficient USDC. You need ${formatUSDC(cost)} but have ${formatUSDC(usdcBalance)}.`, 'error'); return; }
     setStatus(statusId, 'Step 1 of 2 — Approve USDC spending…', 'loading');
     const allowance = await usdc.allowance(userAddr, HE3_SALE_ADDR);
-
     if (allowance < cost) {
       const approveTx = await usdc.approve(HE3_SALE_ADDR, maxCost);
       setStatus(statusId, 'Approving USDC — waiting for confirmation…', 'loading');
       await approveTx.wait();
     }
-
-    // Buy
     setStatus(statusId, 'Step 2 of 2 — Confirm purchase in MetaMask…', 'loading');
     const buyTx = await sale.buyTokens(he3Wei, maxCost);
     setStatus(statusId, 'Transaction submitted — waiting for confirmation…', 'loading');
     await buyTx.wait();
-
     setStatus(statusId, `✓ Success! ${amount} HE3 is now in your wallet.`, 'success');
     showToast(`Purchased ${amount} HE3 successfully`, 'success');
     document.getElementById(amountInputId).value = '';
     document.getElementById(amountInputId === 'tokenAmount' ? 'costPreview' : 'costPreview2').textContent = '—';
     loadStats();
-
   } catch(e) {
     const msg = e?.reason || e?.message || 'Transaction failed';
     setStatus(statusId, msg.length > 80 ? msg.slice(0, 80) + '…' : msg, 'error');
@@ -1219,21 +1076,18 @@ async function buyTokens(amountInputId, statusId) {
   }
 }
 
-// ── DISCONNECT ─────────────────────────────────────────────────────────────
 function disconnect() {
   provider = null; signer = null; userAddr = null;
   updateWalletUI(false);
   showToast('Wallet disconnected');
 }
 
-// ── EVENT LISTENERS ────────────────────────────────────────────────────────
 document.getElementById('connectBtn').addEventListener('click', connectWallet);
 document.getElementById('connectBtn2').addEventListener('click', connectWallet);
 document.getElementById('buyBtn').addEventListener('click', () => buyTokens('tokenAmount', 'statusMsg'));
 document.getElementById('buyBtn2').addEventListener('click', () => buyTokens('tokenAmount2', 'statusMsg2'));
 document.getElementById('disconnectBtn')?.addEventListener('click', disconnect);
 
-// Auto-reconnect if already connected
 if (window.ethereum) {
   window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
     if (accounts.length > 0) connectWallet();
@@ -1245,9 +1099,8 @@ if (window.ethereum) {
   window.ethereum.on('chainChanged', () => window.location.reload());
 }
 
-// ── INIT ───────────────────────────────────────────────────────────────────
 loadStats();
-setInterval(loadStats, 30000); // refresh every 30s
+setInterval(loadStats, 30000);
 </script>
 </body>
 </html>
